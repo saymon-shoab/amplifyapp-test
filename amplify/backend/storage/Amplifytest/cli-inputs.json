@@ -1,0 +1,10 @@
+{
+  "resourceName": "Amplifytest",
+  "tableName": "Amplifytest",
+  "partitionKey": {
+    "fieldName": "Amplify",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

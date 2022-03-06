@@ -1,16 +1,19 @@
 import React, { useEffect , useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Amplify, { API, graphqlOperation } from 'aws-amplify'
+import { API, graphqlOperation } from 'aws-amplify'
 import awsExports from "./aws-exports";
 import { createTodo } from './graphql/mutations'
 import { listTodos } from './graphql/queries'
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
+import Amplify, { Storage } from 'aws-amplify';
+import awsconfig from './aws-exports';
+Amplify.configure(awsconfig);
 Amplify.configure(awsExports);
 
 const initialState = {name:"", description:""}
-
+const initialFormState = "";
 function App() {
 
   const [formState , setFormState] = useState(initialState);
@@ -45,44 +48,53 @@ function App() {
     }
   }
 
+  // image uploade onChange function
+
+  const [formData, setFormData] = useState([]);
+
+async function onChange (e){
+  if(!e.target.files[0])return
+  const file =e.target.file[0] 
+  setFormData({...formData,image: file.name})
+  await Storage.put(file.name,file)
+  fetchNots();
+}
+
+// fetch image from graphql schema
+
+const [notes, setNotes] = useState()
+
+async function fetchNots(){
+  const listNotes = "";
+  const apiData = await API.graphql({query: listNotes})
+  const notsFromAPI = API.apiData.listNotes.items ;
+  await Promise.all(notsFromAPI.map(async note=>{
+    if(note.image){
+      const image = await Storage.get(note.image)
+      note.image = image ;
+    }
+    return note
+  }))
+  setNotes(apiData.data.listNotes.item)
+}
+//. Update the createNote function to add the image to the local image array if an image is associated with the note:
+async function createNote(){
+  let createNoteMutation = "";
+      if(!formData.name || !formData.description)return
+      await API.graphql({query: createNoteMutation, variables: {input:formData}})
+      if(formData.image){
+        const image = await Storage.get(formData.image);
+        formData.image = image;
+      }
+      setNotes([...notes, formData])
+      setFormData(initialFormState)
+}
+
+
   return (
     <div className="app">
-      {/* <Authenticator>
-
-        <br />
-        <br />
-      <div style={styles.container}>
-         <h2 style={{textAlign:"center"}}>Amplify Todo App</h2>
-         <input 
-          style={styles.input}
-          placeholder="username"
-          onChange={event => setInput("name",event.target.value)}
-          value={formState.name}
-         />
-          <input 
-          style={styles.input}
-          placeholder="description"
-          onChange={event => setInput("description",event.target.value)}
-          value={formState.description}
-         />
-         <button style={styles.button} onClick={addTodo}>create todo</button>
-         {
-           todos.map((todo,index)=>(
-             <div key={todo.id ? todo.id : index} style={styles.todo}>    
-               <p style={styles.name}>{todo.name}</p>
-               <p style={styles.description}>{todo.description}</p>
-             </div>
-           ))
-         }
-      </div>
-              
-      </Authenticator> */}
-
-
-
-
-
-<Authenticator>
+     
+     <Authenticator>
     {({ signOut, user }) => (
       <div style={styles.container}>
         <h1>Hello {user.username}</h1>
@@ -101,7 +113,9 @@ function App() {
           value={formState.description}
           placeholder="Description"
         />
+       
         <button style={styles.button} onClick={addTodo}>Create Todo</button>
+   
         {
           todos.map((todo, index) => (
             <div key={todo.id ? todo.id : index} style={styles.todo}>
@@ -110,9 +124,25 @@ function App() {
             </div>
           ))
         }
+            <input
+          type="file"
+          onChange={onChange}
+        />
+        {
+  //       notes.map(note => (
+  //         <div key={note.id || note.name}>
+  //           <h2>{note.name}</h2>
+  //           <p>{note.description}</p>
+  //           {/* <button onClick={() => deleteNote(note)}>Delete note</button> */}
+  //           {
+  //             note.image && <img src={note.image} style={{width: 400}} />
+  //           }
+  //          </div>
+  // ))
+}
       </div>
     )}
-  </Authenticator>
+     </Authenticator>
     </div>
   );
 }

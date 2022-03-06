@@ -6,4 +6,12 @@ type Todo @model {
   id: ID!
   name: String!
   description: String
+  image: String
+},
+
+type Note @model {
+  id: ID!
+  name: String!
+  description: String
+  image: String
 }

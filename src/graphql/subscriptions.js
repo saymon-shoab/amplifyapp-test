@@ -7,6 +7,7 @@ export const onCreateTodo = /* GraphQL */ `
       id
       name
       description
+      image
       createdAt
       updatedAt
     }
@@ -18,6 +19,7 @@ export const onUpdateTodo = /* GraphQL */ `
       id
       name
       description
+      image
       createdAt
       updatedAt
     }
@@ -29,6 +31,43 @@ export const onDeleteTodo = /* GraphQL */ `
       id
       name
       description
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateNote = /* GraphQL */ `
+  subscription OnCreateNote {
+    onCreateNote {
+      id
+      name
+      description
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateNote = /* GraphQL */ `
+  subscription OnUpdateNote {
+    onUpdateNote {
+      id
+      name
+      description
+      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteNote = /* GraphQL */ `
+  subscription OnDeleteNote {
+    onDeleteNote {
+      id
+      name
+      description
+      image
       createdAt
       updatedAt
     }

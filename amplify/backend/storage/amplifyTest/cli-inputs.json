@@ -1,0 +1,14 @@
+{
+  "resourceName": "amplifyTest",
+  "policyUUID": "ccd752ae",
+  "bucketName": "saymon07031999",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

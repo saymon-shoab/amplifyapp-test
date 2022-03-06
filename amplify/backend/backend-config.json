@@ -41,5 +41,16 @@
         ]
       }
     }
+  },
+  "storage": {
+    "Amplifytest": {
+      "service": "DynamoDB",
+      "providerPlugin": "awscloudformation"
+    },
+    "amplifyTest": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    }
   }
 }
